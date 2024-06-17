@@ -28,6 +28,11 @@ import whois
 import requests
 import psutil
 from dotenv import load_dotenv
+from datetime import datetime
+from fastapi import HTTPException
+from fastapi import FastAPI, HTTPException
+from typing import Optional
+import requests
 
 
 load_dotenv()
@@ -534,10 +539,7 @@ def add_url(url: Url):
     else:
         return HTTPException(status_code=500, detail="Erreur de connexion à la base de données.")
     
-from fastapi import HTTPException
 
-
-from datetime import datetime
 
 
 
@@ -713,8 +715,6 @@ def add_info_url(url_id: int):
         return {"error": "No database connection"}
     
 
-from datetime import datetime
-from fastapi import HTTPException
 
 @app.post('/add-all-infourl')
 def add_all_info_url():
@@ -1096,9 +1096,7 @@ async def register(user: UserSignup):
     
     return {"username":user.username}
 
-from fastapi import FastAPI, HTTPException
-from typing import Optional
-import requests
+
 
 
 
