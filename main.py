@@ -27,6 +27,10 @@ import socket
 import whois
 import requests
 import psutil
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 os.environ['PATH'] += r';C:\Program Files (x86)\Nmap'
@@ -34,6 +38,10 @@ os.environ['PATH'] += r';C:\Program Files (x86)\Nmap'
 app = FastAPI()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
 app.add_middleware(
     CORSMiddleware,
@@ -141,9 +149,6 @@ def create_connection():
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-SECRET_KEY = "3a335659ed2f3c367f811ecb6d994224160ad2890c91e4869f8cf6776d1adf35"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES= 30
 
 
 @app.get('/urls')
