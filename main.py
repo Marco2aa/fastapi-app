@@ -7,7 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 import jwt
-from jwt.exceptions import PyJWTError
+from jwt import ExpiredSignatureError, InvalidTokenError
+
 from datetime import datetime, timedelta, timezone
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
@@ -1052,13 +1053,20 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         if username is None:
             raise credentials_exception
         token_data = TokenData(username=username)
-    except PyJWTError:
+    except ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token has expired",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except InvalidTokenError:
         raise credentials_exception
+    
     user = get_user_from_db(username=token_data.username)
     if user is None:
         raise credentials_exception
+    
     return user
-
 
 async def get_current_active_user(current_user: User = Depends(get_current_user)):
     if current_user.disabled:
