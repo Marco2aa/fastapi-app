@@ -6,9 +6,8 @@ from mysql.connector import Error
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
-import jwt
 from jwt import ExpiredSignatureError, InvalidTokenError
-
+import uvicorn
 from datetime import datetime, timedelta, timezone
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
@@ -1059,8 +1058,10 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
             detail="Token has expired",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    
     except InvalidTokenError:
         raise credentials_exception
+    
     
     user = get_user_from_db(username=token_data.username)
     if user is None:
@@ -1348,7 +1349,3 @@ print(f"Version du serveur web : {server_version}")
 
 
 
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
