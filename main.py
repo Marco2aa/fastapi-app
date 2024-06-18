@@ -6,6 +6,7 @@ from mysql.connector import Error
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
+import jwt
 from jwt import ExpiredSignatureError, InvalidTokenError
 import uvicorn
 from datetime import datetime, timedelta, timezone
